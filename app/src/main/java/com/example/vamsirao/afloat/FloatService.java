@@ -28,6 +28,7 @@ public class FloatService extends Service {
 
         chatHead = new ImageView(this);
         chatHead.setImageResource(R.drawable.home_icon);
+        chatHead.setAlpha(0.5f);
 
         params= new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
