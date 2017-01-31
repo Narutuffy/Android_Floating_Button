@@ -28,7 +28,7 @@ public class FloatService extends Service {
 
         chatHead = new ImageView(this);
         chatHead.setImageResource(R.drawable.home_icon);
-        chatHead.setAlpha(0.5f);
+        chatHead.setAlpha(0.85f);
 
         params= new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -48,17 +48,24 @@ public class FloatService extends Service {
             private int initialY;
             private float initialTouchX;
             private float initialTouchY;
+            private long timeStart,timeEnd;
+
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                       timeStart=System.currentTimeMillis();
                         initialX = params.x;
                         initialY = params.y;
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
                         return true;
                     case MotionEvent.ACTION_UP:
+                        timeEnd=System.currentTimeMillis();
+                        if((timeEnd-timeStart)<300){
+                            iconClick();
+                        }
                         return true;
                     case MotionEvent.ACTION_MOVE:
                         params.x = initialX
@@ -72,6 +79,13 @@ public class FloatService extends Service {
             }
         });
         windowManager.addView(chatHead, params);
+    }
+
+    private void iconClick(){
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
     }
 
     @Override
