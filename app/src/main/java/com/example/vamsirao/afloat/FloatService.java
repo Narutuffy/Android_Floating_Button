@@ -1,9 +1,11 @@
 package com.example.vamsirao.afloat;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -19,6 +21,7 @@ public class FloatService extends Service {
     private WindowManager windowManager;
     private ImageView chatHead;
     WindowManager.LayoutParams params;
+    Vibrator vibrator;
 
     @Override
     public void onCreate() {
@@ -28,7 +31,7 @@ public class FloatService extends Service {
 
         chatHead = new ImageView(this);
         chatHead.setImageResource(R.drawable.home_icon);
-        chatHead.setAlpha(0.85f);
+        chatHead.setAlpha(0.90f);
 
         params= new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -48,7 +51,7 @@ public class FloatService extends Service {
             private int initialY;
             private float initialTouchX;
             private float initialTouchY;
-            private long timeStart,timeEnd;
+            private long timeStart,timeEnd,touchDuration;
 
 
             @Override
@@ -63,8 +66,12 @@ public class FloatService extends Service {
                         return true;
                     case MotionEvent.ACTION_UP:
                         timeEnd=System.currentTimeMillis();
-                        if((timeEnd-timeStart)<300){
+                        touchDuration=timeEnd-timeStart;
+
+                        if((touchDuration)<100){
                             iconClick();
+                            vibrator=(Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(touchDuration);
                         }
                         return true;
                     case MotionEvent.ACTION_MOVE:
